@@ -3,9 +3,10 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 class OnlineTime {
-  String? time;
+  String? time ="Loading";
   String? location;
   String? url;
+  //Constructor
   OnlineTime({this.location, this.url});
   Future<void> gettime() async {
     Response response =

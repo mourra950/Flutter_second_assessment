@@ -29,7 +29,7 @@ List<OnlineTime> countryList = [
 ];
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -47,8 +47,7 @@ class _MyAppState extends State<MyApp> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(countryList[index].location!),
-            onTap: () async {
-              await countryList[index].gettime();
+            onTap: () {
               Navigator.pushNamed(context, '/Display',
                   arguments: countryList[index]);
             },
@@ -59,33 +58,39 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class Display extends StatelessWidget {
+class Display extends StatefulWidget {
   const Display({super.key});
+  @override
+  State<Display> createState() => _MyDisplayState();
 
+}
+
+class _MyDisplayState extends State<Display> {
   @override
   Widget build(BuildContext context) {
     final OnlineTime myTime =
-    ModalRoute.of(context)!.settings.arguments as OnlineTime;
-
+        ModalRoute.of(context)!.settings.arguments as OnlineTime;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Time Display'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Location: ${myTime.location}',
-              style: const TextStyle(fontSize: 20),
-            ),
-            Text(
-              'Time: ${myTime.time}',
-              style: const TextStyle(fontSize: 30),
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text('Time Display'),
         ),
-      ),
-    );
+        body: Center(
+          child: FutureBuilder<void>(
+
+              future: myTime.gettime(),
+              builder: (context, snapshot) {
+                return Column(children: [
+                  Text(
+                    'Location: ${myTime.location}',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    'Time:${myTime.time} ',
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                ]);
+              },
+              initialData: ()),
+        ));
   }
 }
